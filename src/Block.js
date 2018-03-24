@@ -1,4 +1,5 @@
-const hmacSha256 = require("crypto-js/hmac-sha256");
+// const hmacSha256 = require("crypto-js/hmac-sha256");
+const sha256 = require("crypto-js/sha256");
 class Block {
     constructor(timestamp, transaction, previousHash='') {
         this.timestamp = timestamp;
@@ -7,12 +8,9 @@ class Block {
         this.hash = this.calculateHash();
         this.nonce = 0;
     }
-    toString() {
-        return "timestamp=" + this.timestamp + ", transaction=" + JSON.stringify(this.transaction) + ",previousHash=" + this.previousHash + ",hash=" + this.hash;
-    }
 
     calculateHash() {
-        return hmacSha256("timestamp=" + this.timestamp, "transaction=" + JSON.stringify(this.transaction) + ",previousHash=" + this.previousHash + ",nonce="+this.nonce).toString();
+        return sha256(this.timestamp + JSON.stringify(this.transaction) + this.previousHash + this.nonce).toString();
     }
 
     mineBlock(difficulty) {
